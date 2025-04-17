@@ -1,25 +1,36 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from pydantic import Field
 
 from llama_stack.apis.eval import BenchmarkConfig, EvalCandidate
-from llama_stack.providers.remote.eval.lmeval.errors import LMEvalConfigError
 from llama_stack.schema_utils import json_schema_type
+
+from src.errors import LMEvalConfigError
 
 
 @json_schema_type
 @dataclass
 class LMEvalBenchmarkConfig(BenchmarkConfig):
-    """Configuration for LMEval benchmark"""
+    """Configuration for LMEval benchmarkd
+
+    The metadata field can contain custom configurations such as:
+
+    - custom_task: For specifying custom task sources (e.g., from git)
+    - env: Dictionary of environment variables to pass to the evaluation pod
+           (e.g., {'DK_BENCH_DATASET_PATH': '', 'JUDGE_MODEL_URL': ''})
+    """
 
     # K8s specific configuration
     model: str = Field(description="Name of the model")
     eval_candidate: EvalCandidate
     # FIXME: mode is only present temporarily and for debug purposes, it will be removed
     mode: str = Field(description="Mode of the benchmark", default="production")
+    env_vars: Optional[List[Dict[str, str]]] = None
+    metadata: Optional[Dict[str, Any]] = None
+
     def __post_init__(self):
         """Validate the configuration"""
         super().__post_init__()
@@ -56,7 +67,7 @@ class LMEvalEvalProviderConfig:
 
     use_k8s: bool = True
     # FIXME: Hardcoded just for debug purposes
-    base_url: str = "http://llamastack-service:8321/v1/completion"
+    base_url: str = "http://llamastack-service:8321"
     namespace: str = "test"
     kubeconfig_path: Optional[str] = None
     # Service account to use for Kubernetes deployment

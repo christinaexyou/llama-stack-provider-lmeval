@@ -1,0 +1,6 @@
+curl -k $LLM_ROUTE/v1/completions  -H "Content-Type: application/json"       -d '{ \
+          "model": "phi-3", \
+          "prompt": "Describe Paris in 100 words or less.", \
+          "max_tokens": 100, \
+          "temperature": 0 \
+      }'
