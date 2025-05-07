@@ -1,0 +1,12 @@
+# .dockerignore
+__pycache__/
+*.pyc
+.github
+.llama-venv
+*.log
+.ipynb_checkpoints/
+build/
+src/llama_stack_provider_lmeval.egg-info
+manifests/
+dist/
+*.ipynb

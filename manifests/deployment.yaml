@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lls-provider-lmeval
+  labels:
+    app: lls-provider-lmeval
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lls-provider-lmeval
+  template:
+    metadata:
+      labels:
+        app: lls-provider-lmeval
+    spec:
+      containers:
+        - name: lls-provider-lmeval
+          image: quay.io/christinaexyou/llama-stack-lmeval-provider:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8321
+              name: http
+              protocol: TCP
